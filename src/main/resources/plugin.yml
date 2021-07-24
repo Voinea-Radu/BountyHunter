@@ -1,0 +1,10 @@
+name: BountyHunter
+version: ${project.version}
+main: dev.lightdream.bountyhunter.BountyHunter
+prefix: BountyHunter
+depend: [ Vault, PlaceholderAPI ]
+authors: [ LightDream ]
+website: https://lightdream.tk
+commands:
+  bh:
+    description: N/A
