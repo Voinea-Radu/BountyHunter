@@ -32,8 +32,17 @@ public class Config {
     );
 
     public int progressBanLength = 10;
-    public int lowestBounty = 10000;
+    public int lowestBounty = 100;
 
     public List<String> disallowedNames = Arrays.asList("/op", "/gmc");
     public List<String> getDisallowedLores = Arrays.asList("COMMON", "FREE");
+
+    public int numberOfFireworks = 5;
+    public int fireWorksRed = 255;
+    public int fireWorksGreen = 0;
+    public int fireWorksBlue = 0;
+
+    public long bountyCoolDown = 1000 * 60 * 60; // in ms
+    public int topUpdatePeriod = 20 * 60 * 60; // in ticks
+    public int topEntries = 10;
 }

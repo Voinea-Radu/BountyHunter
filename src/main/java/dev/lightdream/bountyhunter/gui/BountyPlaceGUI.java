@@ -1,6 +1,7 @@
 package dev.lightdream.bountyhunter.gui;
 
 import dev.lightdream.bountyhunter.BountyHunter;
+import dev.lightdream.bountyhunter.dto.User;
 import dev.lightdream.bountyhunter.utils.Utils;
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
@@ -17,8 +18,8 @@ import java.util.List;
 public class BountyPlaceGUI implements GUI {
 
     private final BountyHunter plugin;
-    private final OfflinePlayer player;
-    private final OfflinePlayer target;
+    private final User player;
+    private final User target;
     private final String message;
 
     @Override
@@ -47,8 +48,7 @@ public class BountyPlaceGUI implements GUI {
 
     @Override
     public Inventory getInventory() {
-        Inventory inventory = Bukkit.createInventory(this, 54, Utils.color(plugin.getMessages().bountyPlaceGuiTitle));
-        return inventory;
+        return Bukkit.createInventory(this, 54, Utils.color(plugin.getMessages().bountyPlaceGuiTitle));
     }
 
     public boolean checkItems(List<ItemStack> items) {

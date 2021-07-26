@@ -2,6 +2,7 @@ package dev.lightdream.bountyhunter.commands;
 
 import dev.lightdream.bountyhunter.BountyHunter;
 import dev.lightdream.bountyhunter.gui.BountyListGUI;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class ListCommand extends Command {
     }
 
     @Override
-    public void execute(Object sender, List<String> args) {
+    public void execute(CommandSender sender, List<String> args) {
         ((Player) sender).openInventory(new BountyListGUI(plugin, 0).getInventory());
     }
 

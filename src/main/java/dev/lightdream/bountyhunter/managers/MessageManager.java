@@ -1,6 +1,7 @@
 package dev.lightdream.bountyhunter.managers;
 
 import dev.lightdream.bountyhunter.BountyHunter;
+import dev.lightdream.bountyhunter.dto.User;
 import dev.lightdream.bountyhunter.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -17,27 +18,25 @@ public class MessageManager {
         this.plugin = plugin;
     }
 
-
-    public void sendMessage(Object target, String message) {
-        if (target instanceof CommandSender) {
-            ((CommandSender) target).sendMessage(Utils.color(plugin.getMessages().prefix + message));
-        }
+    public void sendMessage(CommandSender target, String message) {
+        target.sendMessage(Utils.color(plugin.getMessages().prefix + message));
     }
 
     public void sendMessage(UUID target, String message) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(target);
         if (player != null) {
-            if(player.isOnline()){
-                ((Player)player).sendMessage(Utils.color(plugin.getMessages().prefix + message));
-
+            if (player.isOnline()) {
+                ((Player) player).sendMessage(Utils.color(plugin.getMessages().prefix + message));
             }
         }
     }
 
     public void sendMessage(String target, String message) {
-        Player player = Bukkit.getPlayer(target);
-        if (player != null) {
-            player.sendMessage(Utils.color(plugin.getMessages().prefix + message));
-        }
+        User user = plugin.getDatabaseManager().getUser(target);
+        sendMessage(user, message);
+    }
+
+    public void sendMessage(User target, String message) {
+        sendMessage(target.uuid, message);
     }
 }

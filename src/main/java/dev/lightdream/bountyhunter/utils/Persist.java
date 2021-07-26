@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-@SuppressWarnings({"unused", "FieldCanBeLocal", "deprecation"})
+@SuppressWarnings("unused")
 public class Persist {
 
     private final ObjectMapper objectMapper;
@@ -80,6 +80,7 @@ public class Persist {
             }
         }
         try {
+            save(clazz.newInstance());
             return clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();

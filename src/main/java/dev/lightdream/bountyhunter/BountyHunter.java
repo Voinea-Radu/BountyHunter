@@ -1,9 +1,6 @@
 package dev.lightdream.bountyhunter;
 
-import dev.lightdream.bountyhunter.commands.Command;
-import dev.lightdream.bountyhunter.commands.CreateCommand;
-import dev.lightdream.bountyhunter.commands.LevelCommand;
-import dev.lightdream.bountyhunter.commands.ListCommand;
+import dev.lightdream.bountyhunter.commands.*;
 import dev.lightdream.bountyhunter.dto.*;
 import dev.lightdream.bountyhunter.managers.*;
 import dev.lightdream.bountyhunter.utils.Persist;
@@ -29,6 +26,7 @@ public final class BountyHunter extends JavaPlugin {
     private EventManager eventManager;
     private DatabaseManager databaseManager;
     private LevelManager levelManager;
+    private ScheduleManager scheduleManager;
 
     private Persist persist;
     private Config configuration;
@@ -41,6 +39,8 @@ public final class BountyHunter extends JavaPlugin {
     @Override
     public void onEnable() {
 
+        System.out.println("Bounty hunters version 1.0");
+
         persist = new Persist(this, Persist.PersistType.YAML);
         configuration = persist.load(Config.class);
         messages = persist.load(Messages.class);
@@ -50,6 +50,8 @@ public final class BountyHunter extends JavaPlugin {
         commands.add(new CreateCommand(this));
         commands.add(new ListCommand(this));
         commands.add(new LevelCommand(this));
+        commands.add(new RemoveCommand(this));
+        commands.add(new TopCommand(this));
 
         messageManager = new MessageManager(this);
         commandManager = new CommandManager(this, "bh");
@@ -57,6 +59,7 @@ public final class BountyHunter extends JavaPlugin {
         inventoryManager = new InventoryManager(this);
         eventManager = new EventManager(this);
         levelManager = new LevelManager(this);
+        scheduleManager = new ScheduleManager(this);
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new PAPI(this).register();
@@ -80,13 +83,9 @@ public final class BountyHunter extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        persist.save(configuration);
-        persist.save(messages);
-        persist.save(guiConfig);
-        persist.save(sql);
-
         databaseManager.saveUsers();
         databaseManager.saveBounties();
+        databaseManager.saveBountyCashBacks();
     }
 
     private boolean setupEconomy() {

@@ -9,9 +9,11 @@ import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
 import dev.lightdream.bountyhunter.BountyHunter;
 import dev.lightdream.bountyhunter.dto.Bounty;
+import dev.lightdream.bountyhunter.dto.BountyCashBack;
 import dev.lightdream.bountyhunter.dto.SQL;
 import dev.lightdream.bountyhunter.dto.User;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,12 +35,14 @@ public class DatabaseManager {
 
     private final Dao<User, UUID> userDao;
     private final Dao<Bounty, Integer> bountyDao;
+    private final Dao<BountyCashBack, Integer> bountyCashBackDao;
 
     @Getter
     private final List<User> userList;
     @Getter
     private final List<Bounty> bountyList;
-
+    @Getter
+    private final List<BountyCashBack> bountyCashBackList;
 
     public DatabaseManager(BountyHunter plugin) throws SQLException {
         this.plugin = plugin;
@@ -54,15 +58,19 @@ public class DatabaseManager {
 
         TableUtils.createTableIfNotExists(connectionSource, User.class);
         TableUtils.createTableIfNotExists(connectionSource, Bounty.class);
+        TableUtils.createTableIfNotExists(connectionSource, BountyCashBack.class);
 
         this.userDao = DaoManager.createDao(connectionSource, User.class);
         this.bountyDao = DaoManager.createDao(connectionSource, Bounty.class);
+        this.bountyCashBackDao = DaoManager.createDao(connectionSource, BountyCashBack.class);
 
         userDao.setAutoCommit(getDatabaseConnection(), false);
         bountyDao.setAutoCommit(getDatabaseConnection(), false);
+        bountyCashBackDao.setAutoCommit(getDatabaseConnection(), false);
 
         this.userList = getUsers();
         this.bountyList = getBounties();
+        this.bountyCashBackList = getBountyCashBacks();
     }
 
     private @NotNull String getDatabaseURL() {
@@ -86,7 +94,7 @@ public class DatabaseManager {
         return connectionSource.getReadWriteConnection(null);
     }
 
-    public @NotNull List<User> getUsers() {
+    private @NotNull List<User> getUsers() {
         try {
             return userDao.queryForAll();
         } catch (SQLException exception) {
@@ -95,9 +103,18 @@ public class DatabaseManager {
         return Collections.emptyList();
     }
 
-    public @NotNull List<Bounty> getBounties() {
+    private @NotNull List<Bounty> getBounties() {
         try {
             return bountyDao.queryForAll();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+
+    private @NotNull List<BountyCashBack> getBountyCashBacks() {
+        try {
+            return bountyCashBackDao.queryForAll();
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -126,25 +143,71 @@ public class DatabaseManager {
         }
     }
 
+    public void saveBountyCashBacks() {
+        try {
+            for (BountyCashBack cashBack : bountyCashBackList) {
+                bountyCashBackDao.createOrUpdate(cashBack);
+            }
+            bountyCashBackDao.commit(getDatabaseConnection());
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+
     public @NotNull User getUser(@NotNull UUID uuid) {
-        Optional<User> optionalUser = getUserList().stream().filter(user -> user.getUuid().equals(uuid)).findFirst();
+        Optional<User> optionalUser = userList.stream().filter(user -> user.getUuid().equals(uuid)).findFirst();
 
         if (optionalUser.isPresent()) {
             return optionalUser.get();
         }
 
-        User user = new User(uuid, 0);
+        User user = new User(uuid, Bukkit.getOfflinePlayer(uuid).getName(), 0, 0L);
         userList.add(user);
         return user;
     }
 
+    public @Nullable User getUser(@NotNull String name) {
+        Optional<User> optionalUser = userList.stream().filter(user -> user.name.equals(name)).findFirst();
+        return optionalUser.orElse(null);
+    }
+
     public @Nullable Bounty getBounty(int id) {
-        Optional<Bounty> optionalBounty = getBountyList().stream().filter(bounty -> bounty.id == id).findFirst();
+        Optional<Bounty> optionalBounty = bountyList.stream().filter(bounty -> bounty.id == id).findFirst();
         return optionalBounty.orElse(null);
     }
 
-    public @Nullable List<Bounty> getBounty(UUID target) {
-        return getBountyList().stream().filter(bounty -> bounty.target.equals(target.toString())).collect(Collectors.toList());
+    public @NotNull List<Bounty> getBounty(UUID target) {
+        return bountyList.stream().filter(bounty -> bounty.target.equals(target)).collect(Collectors.toList());
+    }
+
+    public @NotNull List<Bounty> getBounty(UUID player, boolean usePlayer) {
+        return bountyList.stream().filter(bounty -> bounty.player.equals(player)).collect(Collectors.toList());
+    }
+
+    public @NotNull List<Bounty> getBounty(UUID player, UUID target) {
+        return bountyList.stream().filter(bounty -> bounty.target.equals(target) && bounty.player.equals(player)).collect(Collectors.toList());
+    }
+
+    public @NotNull List<BountyCashBack> getBountyCashBacks(UUID player) {
+        return bountyCashBackList.stream().filter(cashBack -> cashBack.player.equals(player)).collect(Collectors.toList());
+    }
+
+    public void removeBounty(Bounty bounty){
+        bountyList.remove(bounty);
+        try {
+            bountyDao.delete(bounty);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeBountyCashBack(BountyCashBack cashBack){
+        bountyCashBackList.remove(cashBack);
+        try {
+            bountyCashBackDao.delete(cashBack);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

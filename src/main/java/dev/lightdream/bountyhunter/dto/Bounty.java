@@ -5,6 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -17,9 +18,9 @@ public class Bounty {
     @DatabaseField(columnName = "id", generatedId = true, canBeNull = false)
     public int id;
     @DatabaseField(columnName = "player")
-    public String player;
+    public UUID player;
     @DatabaseField(columnName = "target")
-    public String target;
+    public UUID target;
     @DatabaseField(columnName = "message")
     public String message;
     @DatabaseField(columnName = "hunters")
@@ -29,7 +30,7 @@ public class Bounty {
     @DatabaseField(columnName = "reward_items")
     public String rewardItems;
     @DatabaseField(columnName = "reward_money")
-    public int rewardMoney;
+    public double rewardMoney;
 
     public Bounty(UUID player, UUID target, String rewardItems, String message, List<UUID> hunters) {
         commonConstructor(player, target, message, hunters);
@@ -38,7 +39,7 @@ public class Bounty {
         this.rewardMoney = 0;
     }
 
-    public Bounty(UUID player, UUID target, int rewardMoney, String message, List<UUID> hunters) {
+    public Bounty(UUID player, UUID target, double rewardMoney, String message, List<UUID> hunters) {
         commonConstructor(player, target, message, hunters);
         this.rewardType = "money";
         this.rewardItems = "";
@@ -46,13 +47,18 @@ public class Bounty {
     }
 
     public void commonConstructor(UUID player, UUID target, String message, List<UUID> hunters) {
-        this.player = player.toString();
-        this.target = target.toString();
+        //this.player = player.toString();
+        //this.target = target.toString();
+        this.player = player;
+        this.target = target;
         this.message = message;
         setHunters(hunters, true);
     }
 
     public List<String> getHunters() {
+        if(hunters.equals("")){
+            return new ArrayList<>();
+        }
         return Arrays.asList(hunters.split("\\|"));
     }
 

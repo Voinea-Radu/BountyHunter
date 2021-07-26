@@ -16,12 +16,18 @@ public class User {
     public int id;
     @DatabaseField(columnName = "uuid", unique = true)
     public UUID uuid;
+    @DatabaseField(columnName = "name", unique = true)
+    public String name;
     @DatabaseField(columnName = "kills")
     public int kills;
+    @DatabaseField(columnName = "last_bounty")
+    public long lastBounty;
 
-    public User(UUID uuid, int kills){
+    public User(UUID uuid, String name, int kills, long lastBounty){
         this.uuid = uuid;
+        this.name = name;
         this.kills = kills;
+        this.lastBounty = lastBounty;
     }
 
 }

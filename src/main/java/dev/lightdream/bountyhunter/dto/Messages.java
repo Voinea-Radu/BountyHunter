@@ -18,6 +18,7 @@ public class Messages {
     public String invalidPlayer = "This is not a valid player. Please check its name again";
     public String notEnoughMoney = "You do not have enough money";
     public String alreadyTakenBounty = "You have already taken this bounty";
+    public String cannotPlaceBountyOnYourself = "You can not place a bounty on yourself";
 
     public String bountyPlaced = "You have placed a bounty on player %target% for %reward%";
     public String bountyPlacedHunted = "%player% have placed a bounty on you for %reward%";
@@ -33,8 +34,12 @@ public class Messages {
 
     public String bountyPlaceGuiTitle = "Add add here all the items";
     public String bountyListGUITitle = "Bounties";
+    public String bountyCreateGUITitle = "Bounty Create";
+
     public String invalidAmount = "You need to place at least 10k";
     public String invalidNameOrLore = "The selected items have invalid name or lore";
+
+    public String bountyCreateCoolDown = "You have to wait %minutes% more minutes until you can create a new bounty";
 
     public List<String> levelMessage = Arrays.asList(
             "You have level %level%",
@@ -47,5 +52,15 @@ public class Messages {
             "/bh level",
             "/bh list"
     );
+
+    public String active = "&aActive";
+    public String inactive = "&cInactive";
+
+    public String leveledUp = "You have leveled up to level %level%";
+
+    public String bountyCanceled = "Your bounty for %target% has been canceled";
+    public String bountyCanceledByYou = "Your have canceled the desired bounty(s) of %player%";
+
+    public String topEntry = "#%place% %player% %level% %kills% %progress_bar% %progress_percent%";
 
 }

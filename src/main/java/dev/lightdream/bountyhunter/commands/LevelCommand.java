@@ -2,6 +2,7 @@ package dev.lightdream.bountyhunter.commands;
 
 import dev.lightdream.bountyhunter.BountyHunter;
 import dev.lightdream.bountyhunter.dto.User;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class LevelCommand extends Command {
     }
 
     @Override
-    public void execute(Object sender, List<String> args) {
+    public void execute(CommandSender sender, List<String> args) {
         Player player = (Player) sender;
         User user = plugin.getDatabaseManager().getUser(player.getUniqueId());
 
