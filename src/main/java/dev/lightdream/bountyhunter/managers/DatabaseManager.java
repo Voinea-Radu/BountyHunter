@@ -167,7 +167,7 @@ public class DatabaseManager {
     }
 
     public @Nullable User getUser(@NotNull String name) {
-        Optional<User> optionalUser = userList.stream().filter(user -> user.name.equals(name)).findFirst();
+        Optional<User> optionalUser = userList.stream().filter(user -> user.name.equalsIgnoreCase(name)).findFirst();
         return optionalUser.orElse(null);
     }
 
