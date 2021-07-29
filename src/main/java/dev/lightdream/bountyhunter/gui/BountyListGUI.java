@@ -86,7 +86,7 @@ public class BountyListGUI implements GUI {
         List<Bounty> bounties = new ArrayList<>();
 
         inventory.setItem(plugin.getGuiConfig().backItem.slot, Utils.setNBT(Utils.setNBT(ItemStackUtils.makeItem(plugin.getGuiConfig().backItem), "gui_use", "back"), "gui_protect", true));
-        inventory.setItem(plugin.getGuiConfig().nextItem.slot, Utils.setNBT(Utils.setNBT(ItemStackUtils.makeItem(plugin.getGuiConfig().nextItem), "gui_use", "back"), "gui_protect", true));
+        inventory.setItem(plugin.getGuiConfig().nextItem.slot, Utils.setNBT(Utils.setNBT(ItemStackUtils.makeItem(plugin.getGuiConfig().nextItem), "gui_use", "next"), "gui_protect", true));
 
         for (int i = 0; i < 54; i++) {
             if (inventory.getItem(i) == null) {
